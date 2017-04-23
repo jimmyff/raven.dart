@@ -1,0 +1,17 @@
+name: raven
+description: A starting point for Dart libraries or applications.
+version: 0.0.1
+#homepage: https://www.example.com
+#author: zoechi <email@example.com>
+
+environment:
+  sdk: '>=1.20.1 <2.0.0'
+
+dependencies:
+  js: '^0.6.1'
+  logging: '^0.11.3+1'
+
+dev_dependencies:
+  bwu_grinder_tasks: ^0.1.1-dev.5
+  http: ^0.11.3+13
+  test: ^0.12.0
