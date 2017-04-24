@@ -44,7 +44,7 @@ class _PropertyDescriptor {
       Object value});
 }
 
-class JsMapRef {
+class JsMap {
   Object _value;
   Object get value => _value;
 
@@ -62,9 +62,9 @@ class JsMapRef {
         _value, key, new _PropertyDescriptor(value: value, enumerable: true));
   }
 
-  JsMapRef.fromJsObject(this._value);
+  JsMap.fromJsObject(this._value);
 
-  JsMapRef.fromMap([Map<String, Object> pairs]) {
+  JsMap.fromMap([Map<String, Object> pairs]) {
     this._value = JsObject.create();
     if (pairs != null) {
       for (final key in pairs.keys) {

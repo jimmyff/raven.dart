@@ -25,7 +25,7 @@ void main() {
 
 // exercise
 
-      final tags = new JsMapRef.fromMap({'test_id': testId});
+      final tags = new JsMap.fromMap({'test_id': testId});
       Raven.doBufferExceptions = true;
       Raven.captureException('1');
       Raven.captureException('2');
@@ -51,7 +51,7 @@ void main() {
           ipAddress: '195.96.0.1',
           email: 'john@example.com');
       Raven.install();
-      final tags = new JsMapRef.fromMap({'tag1': 'tagValue1'});
+      final tags = new JsMap.fromMap({'tag1': 'tagValue1'});
       print('tags: $tags');
       Raven.tags = tags;
 
