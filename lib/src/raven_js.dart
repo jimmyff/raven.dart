@@ -61,7 +61,7 @@ class Raven {
   }
 
   static set user(User context) {
-    _Raven.setUserContext(context);
+    _Raven._setUserContext(context._user);
   }
 
   static set extra(Map<String, Object> extra) {
@@ -76,7 +76,8 @@ class Raven {
     _Raven.clearContext();
   }
 
-  static Context get context => new Context.fromJsObject(_Raven.getContext());
+  static Context get context =>
+      new Context._(new _Context.fromJsObject(_Raven.getContext()));
 
   static set environment(String environment) {
     _Raven.setEnvironment(environment);
@@ -120,7 +121,9 @@ class _Raven {
 
   external static void captureBreadcrumb(Object obj);
 
-  external static void setUserContext(User context);
+  external static void _setUserContext(_User context);
+
+  static void setUserContext(User context) => _setUserContext(context);
 
   external static void setExtraContext(Map<String, Object> extra);
 
@@ -128,7 +131,9 @@ class _Raven {
 
   external static void clearContext();
 
-  external static Context getContext();
+  external static _Context _getContext();
+
+  static Context getContext() => new Context._(_getContext());
 
   external static void setEnvironment(String environment);
 
@@ -152,39 +157,71 @@ class _Raven {
   external static void showReportDialog();
 }
 
-@JS()
-@anonymous
-class Context extends JsMap {
-  external User get user;
-  JsMap get tags => new JsMap.fromJsObject(_tags);
+class Context {
+  JsMap _context;
 
-  @JS('tags')
-  external Object get _tags;
+  JsMap get tags => new JsMap.fromJsObject(_context['tags']);
 
-  Context.fromJsObject(Object obj) : super.fromJsObject(obj);
+  User get user => new User._(_context['user']);
+
+  Context(Object object) : _context = new _Context.fromJsObject(object);
+
+  Context._(this._context);
 }
 
 @JS()
 @anonymous
-class Breadcrumb {}
+class _Context {
+  JsMap _jsMap;
+
+  external _User get _user;
+
+//  JsMap get tags => new JsMap.fromJsObject(_tags);
+
+  @JS('tags')
+  external Object get _tags;
+
+  _Context.fromJsObject(Object obj) : super.fromJsObject(obj);
+
+}
 
 @JS()
 @anonymous
-class User {
-  external String get id;
-  external set id(String value);
+class Breadcrumb {
+  external factory Breadcrumb();
+}
 
-  external String get name;
-  external set name(String value);
+class User implements _User {
+  _User _user;
+  factory User({String id, String name, String ipAddress, String email}) =>
+      new User._(
+          new _User(id: id, name: name, ipAddress: ipAddress, email: email));
 
-  external String get ipAddress;
-  external set ipAddress(String value);
+  User._(_User _user) : _user = _user ?? new _User();
 
-  external String get email;
-  external set email(String value);
+  @override
+  String get id => _user.id;
 
-  external factory User(
-      {String id, String name, String ipAddress, String email});
+  @override
+  set id(String value) => _user.id = value;
+
+  @override
+  String get name => _user.name;
+
+  @override
+  set name(String value) => _user.name = value;
+
+  @override
+  String get ipAddress => _user.ipAddress;
+
+  @override
+  set ipAddress(String value) => _user.ipAddress = value;
+
+  @override
+  String get email => _user.email;
+
+  @override
+  set email(String value) => _user.email = value;
 
   @override
   bool operator ==(Object o) => identical(this, o) || (o is User && id != o.id);
@@ -198,14 +235,33 @@ class User {
       "email='$email'}";
 }
 
+@JS('User')
+@anonymous
+class _User {
+  external String get id;
+  external set id(String value);
+
+  external String get name;
+  external set name(String value);
+
+  external String get ipAddress;
+  external set ipAddress(String value);
+
+  external String get email;
+  external set email(String value);
+
+  external factory _User(
+      {String id, String name, String ipAddress, String email});
+}
+
 @JS()
 @anonymous
 class Options {
-  String logger;
-  String level;
-  String timestamp;
+  external String get logger;
+  external String get level;
+  external String get timestamp;
   // not sure this becomes available at sentry.io
-  Object extra;
+  external Object get extra;
   external factory Options({
     String logger,
     String level,
@@ -256,7 +312,7 @@ class AutoBreadcrumbOptions {
   external bool get console;
   external bool get dom;
   external bool get location;
-  AutoBreadcrumbOptions(
+  external factory AutoBreadcrumbOptions(
       {bool xhr: true,
       bool console: true,
       bool dom: true,
