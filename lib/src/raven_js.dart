@@ -158,20 +158,23 @@ class _Raven {
 }
 
 class Context {
+  Context(Object object) : _context = new _Context.fromJsObject(object);
+
+  Context._(this._context);
+
   JsMap _context;
 
   JsMap get tags => new JsMap.fromJsObject(_context['tags']);
 
   User get user => new User._(_context['user']);
 
-  Context(Object object) : _context = new _Context.fromJsObject(object);
-
-  Context._(this._context);
 }
 
 @JS()
 @anonymous
 class _Context {
+  _Context.fromJsObject(Object obj) : super.fromJsObject(obj);
+
   JsMap _jsMap;
 
   external _User get _user;
@@ -181,7 +184,6 @@ class _Context {
   @JS('tags')
   external Object get _tags;
 
-  _Context.fromJsObject(Object obj) : super.fromJsObject(obj);
 
 }
 
@@ -238,6 +240,9 @@ class User implements _User {
 @JS('User')
 @anonymous
 class _User {
+  external factory _User(
+      {String id, String name, String ipAddress, String email});
+
   external String get id;
   external set id(String value);
 
@@ -249,30 +254,42 @@ class _User {
 
   external String get email;
   external set email(String value);
-
-  external factory _User(
-      {String id, String name, String ipAddress, String email});
 }
 
 @JS()
 @anonymous
 class Options {
-  external String get logger;
-  external String get level;
-  external String get timestamp;
-  // not sure this becomes available at sentry.io
-  external Object get extra;
   external factory Options({
     String logger,
     String level,
     String timestamp,
     JsMap extra,
   });
+
+  external String get logger;
+  external String get level;
+  external String get timestamp;
+  // not sure this becomes available at sentry.io
+  external Object get extra;
 }
 
 @JS()
 @anonymous
 class GlobalOptions {
+  external factory GlobalOptions(
+      {String logger,
+      List<String> ignoreErrors,
+      List<String> ignoreUrls,
+      List<String> whitelistUrls,
+      List<String> includePaths,
+      String crossOrigin,
+      bool collectWindowErrors,
+      num maxMessageLength,
+      num maxUrlLength,
+      num stackTraceLimit,
+      Object autoBreadcrumbs,
+      num sampleRate});
+
   external String get logger;
   external List<String> get ignoreErrors;
   external List<String> get ignoreUrls;
@@ -289,34 +306,21 @@ class GlobalOptions {
   /// `bool` or [AutoBreadcrumbOptions]
   Object autoBreadcrumbs;
   int sampleRate;
-
-  external factory GlobalOptions(
-      {String logger,
-      List<String> ignoreErrors,
-      List<String> ignoreUrls,
-      List<String> whitelistUrls,
-      List<String> includePaths,
-      String crossOrigin,
-      bool collectWindowErrors,
-      num maxMessageLength,
-      num maxUrlLength,
-      num stackTraceLimit,
-      Object autoBreadcrumbs,
-      num sampleRate});
 }
 
 @JS()
 @anonymous
 class AutoBreadcrumbOptions {
-  external bool get xhr;
-  external bool get console;
-  external bool get dom;
-  external bool get location;
   external factory AutoBreadcrumbOptions(
       {bool xhr: true,
       bool console: true,
       bool dom: true,
       bool location: true});
+
+  external bool get xhr;
+  external bool get console;
+  external bool get dom;
+  external bool get location;
 }
 
 /// Levels of log available in Sentry.

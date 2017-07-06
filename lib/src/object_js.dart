@@ -32,19 +32,31 @@ external String _jsonStringify(Object self);
 @JS()
 @anonymous
 class _PropertyDescriptor {
-  external bool get enumerable;
-  external bool get configurable;
-  external bool get writable;
-  external Object get value;
-
   external factory _PropertyDescriptor(
       {bool enumerable: false,
       bool configurable: false,
       bool writable: false,
       Object value});
+
+  external bool get enumerable;
+  external bool get configurable;
+  external bool get writable;
+  external Object get value;
+
 }
 
 class JsMap {
+  JsMap.fromJsObject(this._value);
+
+  JsMap.fromMap([Map<String, Object> pairs]) {
+    this._value = JsObject.create();
+    if (pairs != null) {
+      for (final key in pairs.keys) {
+        this[key] = pairs[key];
+      }
+    }
+  }
+
   Object _value;
   Object get value => _value;
 
@@ -60,17 +72,6 @@ class JsMap {
   void operator []=(String key, Object value) {
     JsObject.defineProperty(
         _value, key, new _PropertyDescriptor(value: value, enumerable: true));
-  }
-
-  JsMap.fromJsObject(this._value);
-
-  JsMap.fromMap([Map<String, Object> pairs]) {
-    this._value = JsObject.create();
-    if (pairs != null) {
-      for (final key in pairs.keys) {
-        this[key] = pairs[key];
-      }
-    }
   }
 
   @override

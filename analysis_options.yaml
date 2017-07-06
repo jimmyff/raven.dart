@@ -81,7 +81,7 @@ linter:
 #    - public_member_api_docs
     - recursive_getters
     - slash_for_doc_comments
-    - sort_constructor_first
+    - sort_constructors_first
     - sort_unnamed_constructors_first
     - super_goes_last
     - type_annotate_public_apis
